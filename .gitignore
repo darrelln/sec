@@ -2,6 +2,16 @@
 .DS_Store
 .AppleDouble
 .LSOverride
+Thumbs.db
+.cache
+.project
+.settings
+.tmproj
+*.esproj
+nbproject
+*.sublime-project
+*.sublime-workspace
+.idea
 
 # Icon must end with two \r
 Icon
@@ -25,3 +35,32 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Ignore docs files
+_gh_pages
+_site
+.ruby-version
+.sass-cache
+
+# Numerous always-ignore extensions
+*.diff
+*.err
+*.orig
+*.log
+*.rej
+*.swo
+*.swp
+*.zip
+*.vi
+*~
+
+# Komodo
+*.komodoproject
+.komodotools
+
+# grunt-html-validation
+validation-status.json
+validation-report.json
+
+# Folders to ignore
+node_modules
