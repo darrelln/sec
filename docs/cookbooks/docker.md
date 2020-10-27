@@ -32,7 +32,7 @@ See the [docker run cli reference](https://docs.docker.com/engine/reference/comm
 |`--volume /:/mnt`|Mount the root of the host to `/mnt` within the container.|
 |`--volume /root:/mnt`|Mount root's home folder of the host to `/mnt/` within the container.|
 
-## Docker Escapes using docker run
+## Docker escapes using docker run
 You'll need a `docker` binary in the container in order to use `docker run`. If you have a shell on the host system you can check if the host and the container are on the same network. If they are, you may be able to `wget` the docker binary from the host to the container.
 
 ```
