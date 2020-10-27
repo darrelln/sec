@@ -1,8 +1,8 @@
 ---
 layout: default
-title: BASH
+title: Bash
 parent: CHEATSHEETS
-has_children: true
+has_children: false
 has_toc: false
 ---
 

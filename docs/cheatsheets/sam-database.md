@@ -1,8 +1,8 @@
 ---
 layout: default
-title: SAM
+title: SAM Database
 parent: CHEATSHEETS
-has_children: true
+has_children: false
 has_toc: false
 ---
 
