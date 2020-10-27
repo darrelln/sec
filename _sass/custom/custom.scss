@@ -1,0 +1,75 @@
+// Variables.
+$color-primary: #32325d;
+
+// ToC, headers, body text etc
+html, body, h1, h2, h3, h4, h5, h6, pre {
+    color: $color-primary;
+}
+
+h3, h4, h5, h6 {
+    font-weight: 600;
+}
+
+// Change title attributes.
+.site-title {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: $color-primary;
+}
+
+// Section titles.
+.nav-list-link {
+    font-weight: 600;
+    color: $color-primary;
+}
+
+// Change color of section expander up/down arrows.
+.nav-list .nav-list-item .nav-list-expander {
+    color: $color-primary;
+}
+
+.nav-list .nav-list-item .nav-list-link:hover,
+.nav-list .nav-list-item .nav-list-link.active {
+    color: $color-primary;
+}
+
+// Anchors.
+a {
+    color: $color-primary;
+}
+
+::selection {
+    background: $color-primary;
+}
+
+.icon {
+    color: $color-primary;
+}
+
+.main-content .anchor-heading svg {
+    color: $color-primary;
+}
+
+.btn {
+    color: $color-primary;
+ }
+
+ .btn-outline {
+    color: $color-primary;
+}
+
+.search-input:focus + .search-label .search-icon {
+    color: $color-primary;
+}
+
+.search-result-doc .search-result-icon {
+    color: $color-primary;
+}
+
+.text-purple-000 {
+    color: $color-primary !important;
+}
+
+.bg-purple-000 {
+    background-color: $color-primary !important;
+}

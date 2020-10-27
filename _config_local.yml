@@ -1,0 +1,9 @@
+title: darrelln.github.io/sec/
+email: ""
+description: >- # this means to ignore newlines until "baseurl:"
+  Welcome to darrelln.github.io/sec/.
+baseurl: ""
+url: ""
+theme: "just-the-docs"
+search_enabled: true
+color_scheme: light
