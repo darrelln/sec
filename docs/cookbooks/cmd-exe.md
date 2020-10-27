@@ -8,17 +8,17 @@ has_toc: false
 
 {% include toc.html %}
 
-## Create an empty file:
+## Create an empty file
 ```
 type nul > file.ext
 ```
 
-## Write text to a file overwriting existing contents:
+## Write text to a file overwriting existing contents
 ```
 echo "hello" > file.ext
 ```
 
-## Append text to a file:
+## Append text to a file
 ```
 echo "hello" >> file.ext
 ```
@@ -39,7 +39,7 @@ cmd.exe /c command 2>nul
 ping /n 1 x.x.x.x
 ```
 
-## Recursively search current folder and sub-folders for any .vbs files:
+## Recursively search current folder and sub-folders for any .vbs files
 ```
 dir *.vbs /s /a                                     // Current and child directories
 dir C:\ /s /a /b | findstr /i ".vbs"                // Root and all child directories
@@ -57,7 +57,7 @@ findstr /i "search term"                            // Case-insensitive seach
 findstr /v "word"                                   // Return matches that do not contain "word"
 ```
 
-## Execute a .cmd or .bat file:
+## Execute a .cmd or .bat file
 ```
 cmd.exe /c file.bat
 ```
