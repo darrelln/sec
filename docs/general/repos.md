@@ -21,3 +21,4 @@ has_toc: true
 |Sherlock|Patch auditing and PrivEsc checks for Windows|sudo git clone https://github.com/rasta-mouse/Sherlock.git /opt/rasta-mouse|
 |SecLists|Wordlists|sudo git clone https://github.com/danielmiessler/SecLists.git /opt/seclists|
 |PTH-Tools|Rewrites of common tools allowing them to use NTLM hashes|sudo git clone https://github.com/byt3bl33d3r/pth-toolkit.git /opt/pth-toolkit/|
+|Pwn Tools|CTF Tools|sudo git clone https://github.com/Gallopsled/pwntools.git /opt/pwntools/|
