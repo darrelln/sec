@@ -1,6 +1,6 @@
 ---
 layout: default
-title: GitHub Repos
+title: Tool Locations
 parent: GENERAL
 has_children: false
 has_toc: true
@@ -23,3 +23,9 @@ has_toc: true
 |PTH-Tools|Rewrites of common tools allowing them to use NTLM hashes|sudo git clone https://github.com/byt3bl33d3r/pth-toolkit.git /opt/pth-toolkit/|
 |Pwn Tools|CTF Tools|sudo git clone https://github.com/Gallopsled/pwntools.git /opt/pwntools/|
 |Peda|Python Exploit Development Assistance for GDB|git clone https://github.com/longld/peda ~/peda|
+
+## Other
+
+|Name|Download|
+|:---|:---|
+|Ghidra|https://ghidra-sre.org/|
