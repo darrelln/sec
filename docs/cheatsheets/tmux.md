@@ -39,7 +39,7 @@ has_toc: false
 |$ Ctrl+b, d                                |Detach window|
 |$ Ctrl+b, %                                |Split panes vertically|
 |$ Ctrl+b, “                                |Split panes horizontally|
-|$ Ctrl+b, :, join-panes -s 1 -t 2          |Join window 1 with window 2|
+|$ Ctrl+b, :, join-pane -s 1 -t 2          |Join window 1 with window 2|
 
 |Panes||
 |:---|:---|

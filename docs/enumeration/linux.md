@@ -17,7 +17,7 @@ has_toc: false
 cat /etc/os-release
 ```
 
-## Kernel and architecture:
+## Kernel and architecture
 ```
 uname -a
 ```
