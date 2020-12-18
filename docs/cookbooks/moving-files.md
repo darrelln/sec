@@ -20,6 +20,13 @@ python3 -m http.server --bind 172.16.0.10 443
 python3 -m http.server --bind 172.16.0.10 --directory tools/ 443
 ```
 
+See [this link](https://floatingoctothorpe.uk/2017/receiving-files-over-http-with-python.html) for creating a `http.server` that accepts `PUT` requests. Use with something like:
+
+```
+curl -X PUT -T file-to-upload http://<IP>:<port>/
+```
+
+
 ## Local FTP server
 ```csharp
 // Python 3
